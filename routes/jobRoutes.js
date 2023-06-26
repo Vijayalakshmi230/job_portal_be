@@ -1,8 +1,7 @@
-const express=require('express')
-const route=express.Router()
+const express = require('express')
+const router = express.Router()
+const {getAllJobs, addNewJob, updateJob} = require('../controllers/jobControllers')
 
-route.get('/',(request,response)=>{
-    response.send(`Working`)
-})
+router.route('/').get(getAllJobs).post(addNewJob).patch(updateJob)
 
-module.exports=route
+module.exports = router

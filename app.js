@@ -1,15 +1,21 @@
 require('dotenv').config()
-const express=require('express')
-const app=express()
-const jobRoutes=require('./routes/jobRoutes')
-const { default: mongoose } = require('mongoose')
-const port =3600
+const express = require('express')
+const app = express()
+const PORT = 3600
+const jobsRouter = require('./routes/jobRoutes')
+const validateJobsRouter = require('./routes/validationRoutes')
+const cors = require('cors')
+const mongoose = require('mongoose')
 
-mongoose.connect(process.env.DB_URL) 
-const db= mongoose.connection
-db.on('Error',(errormessage)=>console.log(errormessage))
-db.once('open',()=>console.log('Connection Established'))
+app.use(cors())
+app.use(express.json())
 
-app.use('/api/v1/job',jobRoutes)
+mongoose.connect(process.env.DB_URL)
+const db = mongoose.connection
+db.on('error', (errorMessage) => console.log(errorMessage))
+db.once('open', () => console.log('Connected Established'))
 
-app.listen(port,()=>console.log(`Srever is running at http://localhost:${port}`))
+app.use('/api/v1/jobs', jobsRouter)
+app.use('/api/v1/jobs/validate', validateJobsRouter)
+
+app.listen(PORT, console.log(`Server listening at http://localhost:${PORT}/api/v1/jobs`))
